@@ -10,6 +10,7 @@ import com.hoony.hoonymusicplayer.databinding.ActivityMainBinding
 import com.hoony.hoonymusicplayer.fragments.AlbumFragment
 import com.hoony.hoonymusicplayer.fragments.FavoriteFragment
 import com.hoony.hoonymusicplayer.fragments.HomeFragment
+import java.util.*
 
 enum class FragmentType(val position: Int) {
     HOME(0),
@@ -22,10 +23,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel>()
 
-    private val fragmentList: List<Fragment> = listOf(
-        HomeFragment(),
-        FavoriteFragment(),
-        AlbumFragment()
+    private val fragmentStackList: List<Stack<Fragment>> = listOf(
+        Stack<Fragment>().apply {
+            add(HomeFragment())
+        },
+        Stack<Fragment>().apply {
+            add(FavoriteFragment())
+        },
+        Stack<Fragment>().apply {
+            add(AlbumFragment())
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             fragmentTypeLiveData.observe(
                 this@MainActivity,
                 Observer {
-                    showFragment(fragmentList[it.position])
+                    showFragment(fragmentStackList[it.position].peek())
                 }
             )
         }
