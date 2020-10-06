@@ -10,6 +10,7 @@ import com.hoony.hoonymusicplayer.databinding.ActivityMainBinding
 import com.hoony.hoonymusicplayer.fragments.AlbumFragment
 import com.hoony.hoonymusicplayer.fragments.FavoriteFragment
 import com.hoony.hoonymusicplayer.fragments.HomeFragment
+import com.hoony.hoonymusicplayer.fragments.MoreFragment
 import java.util.*
 
 enum class FragmentType(val position: Int) {
@@ -69,8 +70,35 @@ class MainActivity : AppCompatActivity() {
                     showFragment(fragmentStackList[it.position].peek())
                 }
             )
+            createFragmentLiveData.observe(
+                this@MainActivity,
+                Observer {
+                    val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
+                    val fragment = MoreFragment(fragmentStack.size)
+                    fragmentStack.push(fragment)
+                    showFragment(fragmentStack.peek())
+                }
+            )
         }
     }
+
+    override fun onBackPressed() {
+        if (isLastFragment()) {
+            super.onBackPressed()
+        } else {
+            val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
+            fragmentStack.pop()
+            showFragment(fragmentStack.peek())
+        }
+    }
+
+    private fun isLastFragment(): Boolean {
+        val fragmentPosition = getCurrentFragmentStackPosition()
+        return fragmentStackList[fragmentPosition].size == 1
+    }
+
+    private fun getCurrentFragmentStackPosition(): Int =
+        viewModel.fragmentTypeLiveData.value?.position ?: -1
 
     private fun showFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(binding.frame.id, fragment).commit()

@@ -16,6 +16,8 @@ abstract class BaseFragment<T : ViewDataBinding, VH : ViewModel> : Fragment() {
     private lateinit var binding: T
 //    private val viewModel by viewModels<VH>()
 
+    fun getBinding(): T = binding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
