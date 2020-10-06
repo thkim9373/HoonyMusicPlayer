@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.hoony.hoonymusicplayer.life_cycle.SingleLiveEvent
+import com.hoony.hoonymusicplayer.life_cycle.Event
 
 class MainViewModel(private val handle: SavedStateHandle) : ViewModel() {
 
@@ -28,9 +28,11 @@ class MainViewModel(private val handle: SavedStateHandle) : ViewModel() {
         _fragmentTypeLiveData.value = fragmentType
     }
 
-    val createFragmentLiveData = SingleLiveEvent<Boolean>()
+    private val _createFragmentLiveData = MutableLiveData<Event<Boolean>>()
+    val createFragmentLiveData: LiveData<Event<Boolean>>
+        get() = _createFragmentLiveData
 
     fun createFragment(boolean: Boolean) {
-        this.createFragmentLiveData.value = boolean
+        _createFragmentLiveData.value = Event(boolean)
     }
 }

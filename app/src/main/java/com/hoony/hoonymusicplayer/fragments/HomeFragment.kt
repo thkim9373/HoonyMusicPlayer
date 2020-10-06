@@ -2,14 +2,14 @@ package com.hoony.hoonymusicplayer.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.hoony.hoonymusicplayer.MainViewModel
 import com.hoony.hoonymusicplayer.R
 import com.hoony.hoonymusicplayer.databinding.FragHomeBinding
 
 class HomeFragment : BaseFragment<FragHomeBinding, MainViewModel>() {
 
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by activityViewModels<MainViewModel>()
 
     override fun getLayoutId(): Int = R.layout.frag_home
 

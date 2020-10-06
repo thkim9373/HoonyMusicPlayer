@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import com.hoony.hoonymusicplayer.MainViewModel
 import com.hoony.hoonymusicplayer.R
 import com.hoony.hoonymusicplayer.databinding.FragTestBinding
 
 class MoreFragment(private val num: Int) : Fragment() {
     private lateinit var binding: FragTestBinding
-    private val viewModel by viewModels<MainViewModel>()
+    private val viewModel by activityViewModels<MainViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

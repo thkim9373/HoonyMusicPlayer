@@ -63,23 +63,21 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun setObserver() {
-        viewModel.apply {
-            fragmentTypeLiveData.observe(
-                this@MainActivity,
-                Observer {
-                    showFragment(fragmentStackList[it.position].peek())
-                }
-            )
-            createFragmentLiveData.observe(
-                this@MainActivity,
-                Observer {
-                    val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
-                    val fragment = MoreFragment(fragmentStack.size)
-                    fragmentStack.push(fragment)
-                    showFragment(fragmentStack.peek())
-                }
-            )
-        }
+        viewModel.fragmentTypeLiveData.observe(
+            this@MainActivity,
+            Observer {
+                showFragment(fragmentStackList[it.position].peek())
+            }
+        )
+        viewModel.createFragmentLiveData.observe(
+            this@MainActivity,
+            Observer {
+                val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
+                val fragment = MoreFragment(fragmentStack.size)
+                fragmentStack.push(fragment)
+                showFragment(fragmentStack.peek())
+            }
+        )
     }
 
     override fun onBackPressed() {
