@@ -72,10 +72,14 @@ class MainActivity : AppCompatActivity() {
         viewModel.createFragmentLiveData.observe(
             this@MainActivity,
             Observer {
-                val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
-                val fragment = MoreFragment(fragmentStack.size)
-                fragmentStack.push(fragment)
-                showFragment(fragmentStack.peek())
+                it.getContentIfNotHandled().let { hasCreateFragment ->
+                    if (hasCreateFragment == true) {
+                        val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
+                        val fragment = MoreFragment(fragmentStack.size)
+                        fragmentStack.push(fragment)
+                        showFragment(fragmentStack.peek())
+                    }
+                }
             }
         )
     }

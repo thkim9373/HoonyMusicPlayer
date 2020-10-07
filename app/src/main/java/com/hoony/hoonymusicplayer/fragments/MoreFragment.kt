@@ -12,6 +12,9 @@ import com.hoony.hoonymusicplayer.R
 import com.hoony.hoonymusicplayer.databinding.FragTestBinding
 
 class MoreFragment(private val num: Int) : Fragment() {
+
+    constructor() : this(0)
+
     private lateinit var binding: FragTestBinding
     private val viewModel by activityViewModels<MainViewModel>()
 

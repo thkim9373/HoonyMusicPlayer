@@ -10,7 +10,6 @@ class MainViewModel(private val handle: SavedStateHandle) : ViewModel() {
 
     companion object {
         private const val HANDLE_KEY_FRAGMENT_TYPE = "fragment_type"
-        private const val HANDLE_KEY_CREATE_FRAGMENT = "create_fragment"
     }
 
     private var fragmentType: FragmentType =
