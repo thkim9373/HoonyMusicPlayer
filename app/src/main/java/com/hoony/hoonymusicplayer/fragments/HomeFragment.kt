@@ -21,7 +21,7 @@ class HomeFragment : BaseFragment<FragHomeBinding, MainViewModel>() {
     private fun setListener() {
         getBinding().apply {
             title.setOnClickListener {
-                viewModel.createFragment(true)
+                viewModel.addFragment(MoreFragment::class.java)
             }
         }
     }

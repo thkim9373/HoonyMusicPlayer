@@ -2,14 +2,12 @@ package com.hoony.hoonymusicplayer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.hoony.hoonymusicplayer.databinding.ActivityMainBinding
-import com.hoony.hoonymusicplayer.fragments.AlbumFragment
-import com.hoony.hoonymusicplayer.fragments.FavoriteFragment
-import com.hoony.hoonymusicplayer.fragments.HomeFragment
 import com.hoony.hoonymusicplayer.fragments.MoreFragment
 import java.util.*
 
@@ -24,17 +22,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel by viewModels<MainViewModel>()
 
-    private val fragmentStackList: List<Stack<Fragment>> = listOf(
-        Stack<Fragment>().apply {
-            add(HomeFragment())
-        },
-        Stack<Fragment>().apply {
-            add(FavoriteFragment())
-        },
-        Stack<Fragment>().apply {
-            add(AlbumFragment())
-        },
-    )
+    private val fragmentStackList: List<Stack<Fragment>> by lazy {
+        viewModel.fragmentStackList.let {
+            listOf(
+                Stack<Fragment>().apply {
+                    it[FragmentType.HOME.position].forEach {
+                        add(it.newInstance())
+                    }
+                },
+                Stack<Fragment>().apply {
+                    it[FragmentType.FAVORITE.position].forEach {
+                        add(it.newInstance())
+                    }
+                },
+                Stack<Fragment>().apply {
+                    it[FragmentType.ALBUM.position].forEach {
+                        add(it.newInstance())
+                    }
+                },
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun setListener() {
         binding.apply {
             bottomNav.setOnNavigationItemSelectedListener {
-                viewModel.changeFragmentType(getFragmentTypeById(it.itemId))
+                viewModel.changeCurrentFragmentType(getFragmentTypeById(it.itemId))
 
                 return@setOnNavigationItemSelectedListener true
             }
@@ -63,19 +71,21 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun setObserver() {
-        viewModel.fragmentTypeLiveData.observe(
+        viewModel.currentFragmentTypeLiveData.observe(
             this@MainActivity,
             Observer {
                 showFragment(fragmentStackList[it.position].peek())
             }
         )
-        viewModel.createFragmentLiveData.observe(
+        viewModel.addFragmentEvent.observe(
             this@MainActivity,
             Observer {
-                it.getContentIfNotHandled().let { hasCreateFragment ->
-                    if (hasCreateFragment == true) {
-                        val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
-                        val fragment = MoreFragment(fragmentStack.size)
+                it.getContentIfNotHandled().let { fragmentClass ->
+                    if (fragmentClass != null) {
+                        val fragmentStack =
+                            fragmentStackList[viewModel.getCurrentFragmentStackPosition()]
+                        Log.d("hoony", fragmentClass.name)
+                        val fragment = MoreFragment.newInstance(fragmentStack.size)
                         fragmentStack.push(fragment)
                         showFragment(fragmentStack.peek())
                     }
@@ -85,22 +95,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (isLastFragment()) {
+        if (viewModel.isLastFragment()) {
             super.onBackPressed()
         } else {
-            val fragmentStack = fragmentStackList[getCurrentFragmentStackPosition()]
+            val fragmentStack = fragmentStackList[viewModel.getCurrentFragmentStackPosition()]
             fragmentStack.pop()
             showFragment(fragmentStack.peek())
         }
     }
-
-    private fun isLastFragment(): Boolean {
-        val fragmentPosition = getCurrentFragmentStackPosition()
-        return fragmentStackList[fragmentPosition].size == 1
-    }
-
-    private fun getCurrentFragmentStackPosition(): Int =
-        viewModel.fragmentTypeLiveData.value?.position ?: -1
 
     private fun showFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(binding.frame.id, fragment).commit()

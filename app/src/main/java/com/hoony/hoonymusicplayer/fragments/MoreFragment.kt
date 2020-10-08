@@ -11,12 +11,28 @@ import com.hoony.hoonymusicplayer.MainViewModel
 import com.hoony.hoonymusicplayer.R
 import com.hoony.hoonymusicplayer.databinding.FragTestBinding
 
-class MoreFragment(private val num: Int) : Fragment() {
+class MoreFragment : Fragment() {
 
-    constructor() : this(0)
+    companion object {
+        private const val COUNT = "count"
+
+        @JvmStatic
+        fun newInstance(count: Int): MoreFragment {
+            val args = Bundle()
+            args.putInt(COUNT, count)
+
+            val fragment = MoreFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     private lateinit var binding: FragTestBinding
     private val viewModel by activityViewModels<MainViewModel>()
+
+    private val num: Int by lazy {
+        arguments?.getInt(COUNT) ?: -1
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +57,7 @@ class MoreFragment(private val num: Int) : Fragment() {
     private fun setListener() {
         binding.apply {
             title.setOnClickListener {
-                viewModel.createFragment(true)
+                viewModel.addFragment(MoreFragment::class.java)
             }
         }
     }
