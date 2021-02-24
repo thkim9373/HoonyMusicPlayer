@@ -7,14 +7,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 
 abstract class BaseFragment<T : ViewDataBinding, VH : ViewModel> : Fragment() {
 
     abstract fun getLayoutId(): Int
 
     private lateinit var binding: T
-//    private val viewModel by viewModels<VH>()
+    private lateinit var viewModel: VH
 
     fun getBinding(): T = binding
 
@@ -30,5 +32,9 @@ abstract class BaseFragment<T : ViewDataBinding, VH : ViewModel> : Fragment() {
             false
         )
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 }
