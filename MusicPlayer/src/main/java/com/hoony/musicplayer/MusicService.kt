@@ -1,17 +1,22 @@
 package com.hoony.musicplayer
 
-import android.content.ComponentName
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import androidx.media.MediaBrowserServiceCompat
 
-class MusicService(
-    context: Context,
-    serviceComponent: ComponentName,
-    callback: ConnectionCallback,
-    rootHints: Bundle
-) : MediaBrowserCompat(
-    context, serviceComponent, callback, rootHints
-) {
+class MusicService : MediaBrowserServiceCompat() {
+    override fun onLoadChildren(
+        parentId: String,
+        result: Result<MutableList<MediaBrowserCompat.MediaItem>>
+    ) {
+        TODO("Not yet implemented")
+    }
 
+    override fun onGetRoot(
+        clientPackageName: String,
+        clientUid: Int,
+        rootHints: Bundle?
+    ): BrowserRoot? {
+        TODO("Not yet implemented")
+    }
 }
