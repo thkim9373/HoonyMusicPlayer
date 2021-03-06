@@ -5,6 +5,7 @@ import android.support.v4.media.MediaBrowserCompat
 import androidx.media.MediaBrowserServiceCompat
 
 class MusicService : MediaBrowserServiceCompat() {
+
     override fun onLoadChildren(
         parentId: String,
         result: Result<MutableList<MediaBrowserCompat.MediaItem>>
